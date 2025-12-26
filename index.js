@@ -26,9 +26,15 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    app.post('/coffees',async(req,res)=>{
+
+    const coffeeCollection = client.db('coffeeDB').collection('coffees') 
+
+
+    app.post('/coffees', async (req, res) => {
       const newCoffee = req.body;
       console.log(newCoffee);
+      const result = await coffeeCollection.insertOne(newCoffee);
+      res.send(result);
 
       //
     })
@@ -44,10 +50,10 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send("Coffee is getting warmer");
+  res.send("Coffee is getting warmer");
 });
-app.listen(port,()=>{
-    console.log(`Coffee is Running on PORT ${port}`);
+app.listen(port, () => {
+  console.log(`Coffee is Running on PORT ${port}`);
 })
 
 
