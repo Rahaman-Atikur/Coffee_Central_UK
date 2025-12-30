@@ -7,8 +7,6 @@ app.use(express.json());
 require('dotenv').config()
 console.log(process.env.DB_USER);
 console.log(process.env.DB_PASS);
-
-
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.laa2pcw.mongodb.net/?appName=Cluster0`;
 // const uri = "mongodb+srv://<db_username>:<db_password>@cluster0.laa2pcw.mongodb.net/?appName=Cluster0";
@@ -36,9 +34,6 @@ async function run() {
       res.send(result);
 
     })
-
-
-
     app.post('/coffees', async (req, res) => {
       const newCoffee = req.body;
       console.log(newCoffee);
@@ -56,8 +51,6 @@ async function run() {
   }
 }
 run().catch(console.dir);
-
-
 app.get('/', (req, res) => {
   res.send("Coffee is getting warmer");
 });
