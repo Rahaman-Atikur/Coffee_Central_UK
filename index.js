@@ -7,7 +7,7 @@ app.use(express.json());
 require('dotenv').config()
 console.log(process.env.DB_USER);
 console.log(process.env.DB_PASS);
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.laa2pcw.mongodb.net/?appName=Cluster0`;
 // const uri = "mongodb+srv://<db_username>:<db_password>@cluster0.laa2pcw.mongodb.net/?appName=Cluster0";
 
@@ -25,15 +25,18 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const coffeesCollection = client.db('coffeeDB').collection('coffees') 
+    const coffeesCollection = client.db('coffeeDB').collection('coffees')
 
-    app.get('/coffees',async(req,res)=>{
+    app.get('/coffees', async (req, res) => {
       const cursor = coffeesCollection.find();
       // const result = await cursor.toArray();
       const result = await coffeesCollection.find().toArray();
       res.send(result);
 
     })
+
+
+
     app.post('/coffees', async (req, res) => {
       const newCoffee = req.body;
       console.log(newCoffee);
@@ -42,6 +45,15 @@ async function run() {
 
       //
     })
+
+    // App deleting 
+    app.delete('/coffees/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) }
+      const result = await coffeesCollection.deleteOne(query);
+      res.send(result);
+    })
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
