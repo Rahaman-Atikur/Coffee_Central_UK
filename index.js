@@ -36,7 +36,7 @@ async function run() {
     })
 
 
-    app.get('/coffees/id:',async(req,res)=>{
+    app.get('/coffees/:id',async(req,res)=>{
       const id = req.params.id;
       console.log(newCoffee);
       const query = {_id: new ObjectId(id)}
@@ -44,9 +44,6 @@ async function run() {
       res.send()
 
     })
-
-
-
     app.post('/coffees', async (req, res) => {
       const newCoffee = req.body;
       console.log(newCoffee);
@@ -55,6 +52,25 @@ async function run() {
 
       //
     })
+    app.put('/coffees/:id',async(req,res){
+      const id = req.params.id;
+       const filter = {_id:new ObjectId(id)}
+       const options = {upsert:true};
+       const updatedCoffee = req.body;
+       const updatedDoc = {
+        $set:updatedCoffee
+       }
+      //  const updatedDoc ={
+      //   $set:{
+      //     name:updatedCoffee.name,
+      //     supplier:updatedCoffee.supplier
+      //   }
+      //  }
+       const result = await coffeesCollection.updateOne(filter,updatedDoc,options);
+       res.send(result);
+    })
+
+    // Send updated coffee to the database next move 
 
     // App deleting 
     app.delete('/coffees/:id', async (req, res) => {
