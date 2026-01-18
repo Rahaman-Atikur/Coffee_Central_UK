@@ -25,7 +25,8 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
-    const coffeesCollection = client.db('coffeeDB').collection('coffees')
+    const coffeesCollection = client.db('coffeeDB').collection('coffees');
+    const userCollection = client.db('coffeeDB').collection('users');
 
     app.get('/coffees', async (req, res) => {
       const cursor = coffeesCollection.find();
@@ -41,9 +42,11 @@ async function run() {
       console.log(newCoffee);
       const query = {_id: new ObjectId(id)}
       const result = await coffeesCollection.findOne(query);
-      res.send()
+      res.send(result);
 
     })
+
+
     app.post('/coffees', async (req, res) => {
       const newCoffee = req.body;
       console.log(newCoffee);
@@ -52,7 +55,9 @@ async function run() {
 
       //
     })
-    app.put('/coffees/:id',async(req,res){
+
+
+    app.put('/coffees/:id',async(req,res)=>{
       const id = req.params.id;
        const filter = {_id:new ObjectId(id)}
        const options = {upsert:true};
@@ -78,6 +83,24 @@ async function run() {
       const query = { _id: new ObjectId(id) }
       const result = await coffeesCollection.deleteOne(query);
       res.send(result);
+    })
+
+    //User Related APIs
+    app.get('/users',async(req,res)=>{
+      const result = await userCollection.find().toArray();
+      res.send(result);
+    })
+
+
+
+
+    // User related database
+    app.post('/users',async(req,res)=>{
+      const userProfile = req.body;
+      console.log(userProfile);
+      const result = await userCollection.insertOne(userProfile);
+      res.send(result);
+
     })
 
     // Send a ping to confirm a successful connection
